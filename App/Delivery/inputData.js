@@ -4,16 +4,22 @@ import {
   StyleSheet,
   View
 } from 'react-native';
-import {Container, Header, Text, Footer, Button, Right, Icon, Content, Left, Body, Title, Item as FormItem, Form,List, ListItem, Picker } from 'native-base';
+import {Container, Header, Text, Footer, Button, Right, Icon, Content, Left, Body, Title, Item as FormItem, Form,List, ListItem, Picker, Spinner } from 'native-base';
 import DatePicker from 'react-native-datepicker';
+import Service from './apiService.js';
 
 export default class HomePage extends Component {
     constructor(props){
         super(props);
-        let currentDay = new Date();
-        let countries = [{key: 1, label: "Tel Aviv"}, {key: 2, label: "Kyiv"}, {key: 3, label: "Moscow"}];        
-        this.state = {currentDay : currentDay, countries : countries, fromCountry:"", toCountry:"", fromDate:"", toDate:"", type: this.props.navigation.state.params.type};              
+        this.countries();      
+        this.state = {Loading : true, currentDay : new Date(), fromCountry:"", toCountry:"", fromDate:"", toDate:"", type: this.props.navigation.state.params.type};                   
     }
+
+    countries = async () => {        
+        let api = new Service();
+        let res = await api.getCountries();
+        this.setState({countries : res, Loading:false});
+    };
 
     onValueChangeToCountry(value) {
         this.setState({
@@ -27,13 +33,14 @@ export default class HomePage extends Component {
         });
     }
 
+    
     updateDropdown(){
-        const all_items = this.state.countries.map((country, i) => {
-          return (
-              <Picker.Item key={i} label={country.label} value={country.label} />
-            )
-         });
-         return all_items;
+        const all_items = this.state.countries ? this.state.countries.map((country, index) => {
+                return (
+                    <Picker.Item key={index} label={country} value={country} />
+                )
+        }) : [];
+        return all_items;
   }
 
    datePicker(title, dateState, minDate = new Date(), isFromDate = true) {
@@ -78,6 +85,16 @@ export default class HomePage extends Component {
    }
 
     render() {
+        if(this.state.Loading){
+            return (
+                <Container>
+                    <Spinner />
+                    <Button onPress={() => this.setState({Loading : false})}>
+                        <Text>Stop loading</Text>                        
+                    </Button>    
+                </Container>
+            )
+        }
         let nav = this.props.navigation.navigate;      
         return (
         <Container>
@@ -104,7 +121,7 @@ export default class HomePage extends Component {
                         placeholder="Select country FROM"
                         iosHeader="Select country FROM"
                         note={false}
-                        selectedValue={this.state.fromCountry}
+                        selectedValue="1"
                         onValueChange={this.onValueChangeFromCountry.bind(this)}
                         >
                         { this.updateDropdown() }
