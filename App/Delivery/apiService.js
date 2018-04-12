@@ -1,4 +1,5 @@
 export default class Service {
+    baseUrlApi = 'http://www.mocky.io/v2/';
 
     async getCountries(){
         try{
@@ -6,7 +7,7 @@ export default class Service {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             };
-            let response = await this.getResponse('http://www.mocky.io/v2/5acb170f2e00003500bbab17?mocky-delay=2000ms', {headers: header});        
+            let response = await this.getResponse(this.baseUrlApi + '5acb170f2e00003500bbab17?mocky-delay=1000ms', {headers: header});        
             if(response.statusReply.status == "OK")
             {
                 return response.data.countries;
