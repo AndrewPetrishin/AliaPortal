@@ -6,7 +6,7 @@
 
 import React, { Component } from 'react';
 import {Container, Header, Text, Footer, Button, Right, Icon, Content, Left, Body, Title, ListItem, CheckBox, Item, Input} from 'native-base';
-
+import {Keyboard } from 'react-native';
 
 export default class ChooseItems extends Component {
     constructor(props){
@@ -18,7 +18,7 @@ export default class ChooseItems extends Component {
     }
 
     displayDescription(isShow){
-        
+        Keyboard.dismiss();
         return isShow? (
             <Content>
                 <Item>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {  Platform,  StyleSheet, ImageBackground, Image } from 'react-native';
-import {Container, Header, Text, Footer, Button, Right, Icon, Content, Left, Body, Title, Item , Form,List, ListItem, Picker, Spinner,Input} from 'native-base';
+import {  Platform,  StyleSheet, ImageBackground, Image, Keyboard, TextInput } from 'react-native';
+import {Container, Header, Text, Footer, Button, Right, Icon, Content, Left, Body, Title, Item , Form,List, ListItem, Picker, Spinner, Label, Input} from 'native-base';
 import DatePicker from 'react-native-datepicker';
 import Service from './apiService.js';
 
@@ -77,7 +77,7 @@ export default class DeliveryWizard extends Component {
     return res;
    }
 
-   toogleSpinner(){
+   toogleSpinner(nav){
         if(this.state.Loading) {
             return (
                 <Container style={styles.spinnerContainer}>
@@ -86,29 +86,33 @@ export default class DeliveryWizard extends Component {
             );                        
         }    
         return (
-            <Container style={styles.formContainer}>
-            <Form>
-                <Text>FROM</Text>
-                <Container style={{flexDirection:'row', justifyContent:"flex-start", alignItems:"flex-start"}}>   
-                    <Item regular style={{width : '80%'}}>                 
-                        <Input placeholder="Select country" onValueChange = {this.onValueChangeFromCountry.bind(this)} style={styles.inputBox}/>              
-                    </Item>                    
-                    { this.datePicker(this.state.fromDate) }                    
-                </Container>
-                <Text>TO</Text>
-                <Container style={{flexDirection:'row', justifyContent:"flex-start", alignItems:"flex-start"}}>   
-                    <Item regular style={{width : '80%'}}>                 
-                        <Input placeholder="Select country" onValueChange = {this.onValueChangeToCountry.bind(this)} style={styles.inputBox}/>              
-                    </Item>                    
-                    { this.datePicker(this.state.fromDate, this.state.currentDay + this.state.fromDate, false) }                    
-                </Container>                                  
-
-                <Container style={{flexDirection:'column', justifyContent:"center", alignItems : 'center', alignContent : 'center'}}>
-                    <Button onPress={() => nav('DeliveryWizard2', { dataStorage : this.returnData()})}>
-                        <Text>Next step</Text>
-                    </Button>  
-                </Container>  
-            </Form>         
+            <Container style={styles.formContainer}>            
+                <Form>
+                    <Item floatingLabel bordered rounded>
+                        <Label>Username</Label>
+                        <Input />
+                    </Item>
+                        <Item fixedLabel last>
+                        <Label>Password</Label>
+                    <Input />
+                </Item>
+            </Form>
+                <Form>
+                    <Text>FROM</Text>
+                    <TextInput placeholder="Select country" onValueChange = {this.onValueChangeFromCountry.bind(this)} style={styles.inputBox}/>      
+                    <Container style={{flexDirection:'row', justifyContent:"flex-start", alignItems:"flex-start", backgroundColor:"grey"}}>   
+                        <Item fixedLabel>
+                            <Label>Select country</Label>
+                            <TextInput />
+                        </Item>                 
+                        { this.datePicker(this.state.fromDate) }                    
+                    </Container>
+                    <Container style={{flexDirection:'column', justifyContent:"center", alignItems : 'center', alignContent : 'center'}}>
+                        <Button onPress={() => nav('DeliveryWizard2', { dataStorage : this.returnData()})}>
+                            <Text>Next step</Text>
+                        </Button>  
+                    </Container>                  
+                </Form>                 
             </Container>
         );
    }
@@ -116,14 +120,15 @@ export default class DeliveryWizard extends Component {
     render() {
         let nav = this.props.navigation.navigate;      
         return (
-            <Container style={styles.mainContainer}>
-                <ImageBackground source={this.img_top_bg} style={styles.mainBackground}/>
+            <Container style={styles.mainContainer}>                    
+                <Image source={this.img_top_bg} style={styles.mainBackground}/>
                 <Container style={styles.logoContainer}>
                     <Image source={this.state.top_logo} style={{width: this.state.logo_w, height: this.state.logo_h}}/> 
                     <Text style={styles.textUnderLogo}>{this.state.textUnderLogo}</Text>
                 </Container>                
-                {this.toogleSpinner()}           
+                {this.toogleSpinner(nav)}              
             </Container>
+            
             )
         }    
 }
@@ -166,9 +171,9 @@ const styles = StyleSheet.create({
         textAlign : 'center',
         flexWrap:'wrap'
     },
-    inputBox : {
+    inputBox :{
+        margin: 0
     },
-
     button: {
       margin: 20,
       padding: 20,
